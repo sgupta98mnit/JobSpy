@@ -27,6 +27,7 @@ from ..models.errors import (
     NetworkError, 
     SearchTimeoutError
 )
+from .cache_service import search_results_cache
 
 
 class JobSearchService:
@@ -92,6 +93,13 @@ class JobSearchService:
                 site_names=search_request.site_names,
                 total_results=len(jobs),
                 errors=errors
+            )
+            
+            # Store results in cache for export functionality
+            await search_results_cache.store_search_results(
+                search_id=search_id,
+                jobs=jobs,
+                search_metadata=metadata.model_dump()
             )
             
             return JobSearchResponse(

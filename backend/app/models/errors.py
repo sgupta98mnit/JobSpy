@@ -178,3 +178,15 @@ class SearchTimeoutError(JobSearchError):
         details = {"timeout_seconds": timeout_seconds}
         super().__init__(message, "SEARCH_TIMEOUT", details)
         self.timeout_seconds = timeout_seconds
+
+
+class ExportError(JobSearchError):
+    """
+    Exception for export-related errors.
+    """
+    def __init__(self, message: str, export_format: Optional[str] = None, details: Optional[Dict[str, Any]] = None):
+        export_details = details or {}
+        if export_format:
+            export_details["export_format"] = export_format
+        super().__init__(message, "EXPORT_ERROR", export_details)
+        self.export_format = export_format
